@@ -1,6 +1,6 @@
-from .database import get_db, startup_event
+from database import get_db, startup_event
+from models import Item
 from fastapi import FastAPI
-from .models import Item
 from fastapi.exceptions import RequestValidationError
 from fastapi.responses import JSONResponse
 app = FastAPI()
@@ -96,3 +96,7 @@ def count_items():
     cursor.execute("SELECT COUNT(*) FROM items")
     count = cursor.fetchone()[0]
     return {"count": count}
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="0.0.0.0", port=8000)
