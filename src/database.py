@@ -1,3 +1,4 @@
+import logging
 import sqlite3
 def get_db():
     conn = sqlite3.connect("items.db")
@@ -8,4 +9,4 @@ def startup_event():
     conn.execute(
         "CREATE TABLE IF NOT EXISTS items (id INTEGER PRIMARY KEY, name TEXT, price REAL, is_offer INTEGER)")
     conn.commit()
-    print("Database created!")
+    logging.debug("Database created!")
