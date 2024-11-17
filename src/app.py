@@ -1,6 +1,6 @@
-from database import get_db, startup_event
+from .database import get_db, startup_event
 from fastapi import FastAPI
-from models import Item
+from .models import Item
 app = FastAPI()
 app.add_event_handler("startup", startup_event)
 @app.post("/items/", status_code=201)
@@ -57,3 +57,19 @@ def delete_item(item_id: int):
     conn.execute("DELETE FROM items WHERE id = ?", (item_id,))
     conn.commit()
     return {"message": "Item deleted"}
+
+@app.get("/items/offers/")
+def get_offer_items():
+    """
+    API route to get all items that are offers.
+
+    Returns
+    -------
+    List[Item]
+        A list of items that are offers.
+    """
+    conn = get_db()
+    cursor = conn.cursor()
+    cursor.execute("SELECT id, name, price, is_offer FROM items WHERE is_offer = 1")
+    rows = cursor.fetchall()
+    return [Item(id=row[0], name=row[1], price=row[2], is_offer=bool(row[3])) for row in rows]
